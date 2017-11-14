@@ -4,13 +4,17 @@ import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 
 @Entity
 @Table(name="User_Bookings",uniqueConstraints = {
@@ -19,9 +23,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class Booking {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	//@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="User_Booking_Id")
-	private long userBookingQuoteId;
+	private String userBookingQuoteId;
 	@Column(name="User_Type",nullable=false)
 	private String userType;
 	@Column(name="User_Source_Location",nullable=false)
@@ -30,23 +34,28 @@ public class Booking {
 	private String userDestinationLocation;
 	@Column(name="User_Time_To_Shift",nullable=false)
 	private String userTimeToShift;
-	@Column(name="User_Property_Is_Apartment",nullable=false)
-	private Boolean userPropertyIsApartment;
-	@Column(name="User_Property_Is_Bunglow",nullable=false)
-	private Boolean userPropertyIsBunglow;
+	@Column(name="User_Source_Property_Type",nullable=false)
+	private String userSourcePropertyType;
+	@Column(name="User_Destination_Property_Type",nullable=false)
+	private String userDestinationPropertyType;
+	@Column(name="User_Source_Property_Floor_Num",nullable=false)
+	private long userSourcePropertyFloorNum;
+	@Column(name="User_Destination_Property_Floor_Num",nullable=false)
+	private long userDestinationPropertyFloorNum;
 	@Column(name="User_Property_Is_Packing_Required_Source",nullable=false)
-	private Boolean userPropertyIsPackingRequiredSource;
+	private String userPropertyIsPackingRequiredSource;
 	@Column(name="User_Property_Is_Loading_Required_Source",nullable=false)
-	private Boolean userPropertyIsLoadingRequiredSource;
+	private String userPropertyIsLoadingRequiredSource;
 	@Column(name="User_Property_Is_Elevator_Available_Source",nullable=false)
-	private Boolean userPropertyIsElevatorAvailableSource;
+	private String userPropertyIsElevatorAvailableSource;
 	@Column(name="User_Property_Is_Unpacking_Required_Destination",nullable=false)
-	private Boolean userPropertyIsUnpackingRequiredDestination;
+	private String userPropertyIsUnpackingRequiredDestination;
 	@Column(name="User_Property_Is_Unloading_Required_Destination",nullable=false)
-	private Boolean userPropertyIsUnloadingRequiredDestination;
+	private String userPropertyIsUnloadingRequiredDestination;
 	@Column(name="User_Property_Is_Elevator_Required_Destination",nullable=false)
-	private Boolean userPropertyIsElevatorRequiredDestination;
-	
+	private String userPropertyIsElevatorRequiredDestination;
+	@Column(name="User_Id",nullable=false)
+	private long userId;
 	
 	
 	public Booking() {
@@ -55,114 +64,192 @@ public class Booking {
 	}
 
 
-	public Booking(long userBookingQuoteId, String userType, String userSourceLocation, String userDestinationLocation,
-			String userTimeToShift, Boolean userPropertyIsApartment, Boolean userPropertyIsBunglow,
-			Boolean userPropertyIsPackingRequiredSource, Boolean userPropertyIsLoadingRequiredSource,
-			Boolean userPropertyIsElevatorAvailableSource, Boolean userPropertyIsUnpackingRequiredDestination,
-			Boolean userPropertyIsUnloadingRequiredDestination, Boolean userPropertyIsElevatorRequiredDestination) {
+	public Booking(String userBookingQuoteId, String userType, String userSourceLocation, String userDestinationLocation,
+			String userTimeToShift, String userSourcePropertyType, String userDestinationPropertyType,
+			long userSourcePropertyFloorNum, long userDestinationPropertyFloorNum,
+			String userPropertyIsPackingRequiredSource, String userPropertyIsLoadingRequiredSource,
+			String userPropertyIsElevatorAvailableSource, String userPropertyIsUnpackingRequiredDestination,
+			String userPropertyIsUnloadingRequiredDestination, String userPropertyIsElevatorRequiredDestination,
+			long userId) {
 		super();
 		this.userBookingQuoteId = userBookingQuoteId;
 		this.userType = userType;
 		this.userSourceLocation = userSourceLocation;
 		this.userDestinationLocation = userDestinationLocation;
 		this.userTimeToShift = userTimeToShift;
-		this.userPropertyIsApartment = userPropertyIsApartment;
-		this.userPropertyIsBunglow = userPropertyIsBunglow;
+		this.userSourcePropertyType = userSourcePropertyType;
+		this.userDestinationPropertyType = userDestinationPropertyType;
+		this.userSourcePropertyFloorNum = userSourcePropertyFloorNum;
+		this.userDestinationPropertyFloorNum = userDestinationPropertyFloorNum;
 		this.userPropertyIsPackingRequiredSource = userPropertyIsPackingRequiredSource;
 		this.userPropertyIsLoadingRequiredSource = userPropertyIsLoadingRequiredSource;
 		this.userPropertyIsElevatorAvailableSource = userPropertyIsElevatorAvailableSource;
 		this.userPropertyIsUnpackingRequiredDestination = userPropertyIsUnpackingRequiredDestination;
 		this.userPropertyIsUnloadingRequiredDestination = userPropertyIsUnloadingRequiredDestination;
 		this.userPropertyIsElevatorRequiredDestination = userPropertyIsElevatorRequiredDestination;
+		this.userId = userId;
 	}
-	
-	
-	public long getUserBookingQuoteId() {
+
+
+	public String getUserBookingQuoteId() {
 		return userBookingQuoteId;
 	}
-	public void setUserBookingQuoteId(long userBookingQuoteId) {
+
+
+	public void setUserBookingQuoteId(String userBookingQuoteId) {
 		this.userBookingQuoteId = userBookingQuoteId;
 	}
+
+
 	public String getUserType() {
 		return userType;
 	}
+
+
 	public void setUserType(String userType) {
 		this.userType = userType;
 	}
+
+
 	public String getUserSourceLocation() {
 		return userSourceLocation;
 	}
+
+
 	public void setUserSourceLocation(String userSourceLocation) {
 		this.userSourceLocation = userSourceLocation;
 	}
+
+
 	public String getUserDestinationLocation() {
 		return userDestinationLocation;
 	}
+
+
 	public void setUserDestinationLocation(String userDestinationLocation) {
 		this.userDestinationLocation = userDestinationLocation;
 	}
+
+
 	public String getUserTimeToShift() {
 		return userTimeToShift;
 	}
+
+
 	public void setUserTimeToShift(String userTimeToShift) {
 		this.userTimeToShift = userTimeToShift;
 	}
-	public Boolean getUserPropertyIsApartment() {
-		return userPropertyIsApartment;
+
+
+	public String getUserSourcePropertyType() {
+		return userSourcePropertyType;
 	}
-	public void setUserPropertyIsApartment(Boolean userPropertyIsApartment) {
-		this.userPropertyIsApartment = userPropertyIsApartment;
+
+
+	public void setUserSourcePropertyType(String userSourcePropertyType) {
+		this.userSourcePropertyType = userSourcePropertyType;
 	}
-	public Boolean getUserPropertyIsBunglow() {
-		return userPropertyIsBunglow;
+
+
+	public String getUserDestinationPropertyType() {
+		return userDestinationPropertyType;
 	}
-	public void setUserPropertyIsBunglow(Boolean userPropertyIsBunglow) {
-		this.userPropertyIsBunglow = userPropertyIsBunglow;
+
+
+	public void setUserDestinationPropertyType(String userDestinationPropertyType) {
+		this.userDestinationPropertyType = userDestinationPropertyType;
 	}
-	public Boolean getUserPropertyIsPackingRequiredSource() {
+
+
+	public long getUserSourcePropertyFloorNum() {
+		return userSourcePropertyFloorNum;
+	}
+
+
+	public void setUserSourcePropertyFloorNum(long userSourcePropertyFloorNum) {
+		this.userSourcePropertyFloorNum = userSourcePropertyFloorNum;
+	}
+
+
+	public long getUserDestinationPropertyFloorNum() {
+		return userDestinationPropertyFloorNum;
+	}
+
+
+	public void setUserDestinationPropertyFloorNum(long userDestinationPropertyFloorNum) {
+		this.userDestinationPropertyFloorNum = userDestinationPropertyFloorNum;
+	}
+
+
+	public String getUserPropertyIsPackingRequiredSource() {
 		return userPropertyIsPackingRequiredSource;
 	}
-	public void setUserPropertyIsPackingRequiredSource(Boolean userPropertyIsPackingRequiredSource) {
+
+
+	public void setUserPropertyIsPackingRequiredSource(String userPropertyIsPackingRequiredSource) {
 		this.userPropertyIsPackingRequiredSource = userPropertyIsPackingRequiredSource;
 	}
-	public Boolean getUserPropertyIsLoadingRequiredSource() {
+
+
+	public String getUserPropertyIsLoadingRequiredSource() {
 		return userPropertyIsLoadingRequiredSource;
 	}
-	public void setUserPropertyIsLoadingRequiredSource(Boolean userPropertyIsLoadingRequiredSource) {
+
+
+	public void setUserPropertyIsLoadingRequiredSource(String userPropertyIsLoadingRequiredSource) {
 		this.userPropertyIsLoadingRequiredSource = userPropertyIsLoadingRequiredSource;
 	}
-	public Boolean getUserPropertyIsElevatorAvailableSource() {
+
+
+	public String getUserPropertyIsElevatorAvailableSource() {
 		return userPropertyIsElevatorAvailableSource;
 	}
-	public void setUserPropertyIsElevatorAvailableSource(Boolean userPropertyIsElevatorAvailableSource) {
+
+
+	public void setUserPropertyIsElevatorAvailableSource(String userPropertyIsElevatorAvailableSource) {
 		this.userPropertyIsElevatorAvailableSource = userPropertyIsElevatorAvailableSource;
 	}
-	public Boolean getUserPropertyIsUnpackingRequiredDestination() {
+
+
+	public String getUserPropertyIsUnpackingRequiredDestination() {
 		return userPropertyIsUnpackingRequiredDestination;
 	}
-	public void setUserPropertyIsUnpackingRequiredDestination(Boolean userPropertyIsUnpackingRequiredDestination) {
+
+
+	public void setUserPropertyIsUnpackingRequiredDestination(String userPropertyIsUnpackingRequiredDestination) {
 		this.userPropertyIsUnpackingRequiredDestination = userPropertyIsUnpackingRequiredDestination;
 	}
-	public Boolean getUserPropertyIsUnloadingRequiredDestination() {
+
+
+	public String getUserPropertyIsUnloadingRequiredDestination() {
 		return userPropertyIsUnloadingRequiredDestination;
 	}
-	public void setUserPropertyIsUnloadingRequiredDestination(Boolean userPropertyIsUnloadingRequiredDestination) {
+
+
+	public void setUserPropertyIsUnloadingRequiredDestination(String userPropertyIsUnloadingRequiredDestination) {
 		this.userPropertyIsUnloadingRequiredDestination = userPropertyIsUnloadingRequiredDestination;
 	}
-	public Boolean getUserPropertyIsElevatorRequiredDestination() {
+
+
+	public String getUserPropertyIsElevatorRequiredDestination() {
 		return userPropertyIsElevatorRequiredDestination;
 	}
-	public void setUserPropertyIsElevatorRequiredDestination(Boolean userPropertyIsElevatorRequiredDestination) {
+
+
+	public void setUserPropertyIsElevatorRequiredDestination(String userPropertyIsElevatorRequiredDestination) {
 		this.userPropertyIsElevatorRequiredDestination = userPropertyIsElevatorRequiredDestination;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
+
+
+	public long getUserId() {
+		return userId;
+	}
+
+
+	public void setUserId(long userId) {
+		this.userId = userId;
+	}
+
 	
 	
 
